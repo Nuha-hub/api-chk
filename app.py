@@ -71,7 +71,7 @@ def check_email(email):
                 elif '"isAvailable":false' in req:
                   return jsonify({'status': 'error', 'message': f'unAvailble  email: {email}'})
                 else:
-                  check_email(email)
+                  return jsonify({'status': 'error', 'message': f'Write the email correctly: {email}'})
 
 if __name__ == '__main__':
     app.run(debug=True)
