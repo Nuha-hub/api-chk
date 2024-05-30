@@ -50,7 +50,7 @@ def search(re):
 		following_count= response['data']['user']['following_count']
 		media_count = response['data']['user']['media_count']
 		profile_pic_url = response['data']['user']['hd_profile_pic_url_info']['url']
-		return({'username':username,'full_name':full_name,'is_private':is_private,'profile_pic_url':profile_pic_url,'biography':biography,'follower':follower_count,'following':following_count,'posts':media_count},'\n')
+		return jsonify({'username':username,'full_name':full_name,'is_private':is_private,'profile_pic_url':profile_pic_url,'biography':biography,'follower':follower_count,'following':following_count,'posts':media_count},'\n')
 		
 	except:
 		return {'status':'bad','message':'The Id Is Invaild Or Send request After 3 second '}
