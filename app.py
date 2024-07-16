@@ -12,7 +12,6 @@ app = Flask(__name__)
 def chk(email):
 	ma = requests.Session()
 	passwor = f"#PWD_INSTAGRAM_BROWSER:0:{int(time.time())}:hassan11inthetop878n"
-	s3 = ma.get('https://www.instagram.com/accounts/login/').cookies.get_dict()['csrftokrn']
 	rs3 = ma.get('https://www.instagram.com/accounts/login/')
 	ctk = rs3.text.replace("\\", "").split('csrf_token\":\"')[1].split('"')[0]
 	headers = {
