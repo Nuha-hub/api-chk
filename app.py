@@ -1,4 +1,6 @@
 import os
+os.system('pip install telebot')
+os.system('pip install telethon')
 import telebot
 from telebot import types
 from telethon import TelegramClient
