@@ -21,7 +21,7 @@ def rand(cho):
 app = Flask(__name__)
 
 @app.route('/login/username=<username>/password=<password>/by/cc_02', methods=['GET'])
-def login(username,password)
+def login(username,password):
 	url = rand(random.choice(['login','mem']))
 	
 	payload = {
