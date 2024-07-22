@@ -1,51 +1,60 @@
-import requests,re,random,time
+import requests,random
 from flask import Flask, jsonify, request
-from user_agent import *
 
 
 
+def rand(cho):
+	login = [
+	'https://instamoda.org/', 'https://takipcikrali.com/', 'https://takipstar.com/',
+	'https://takipcigir.com/', 'https://takipcibase.com/', 'https://takipcimx.com/',
+	'https://takipcizen.com/', 'https://takipciking.net/',
+	'https://bayitakipci.com/member', 'https://begenivar.com/']
+	mem = [
+	'https://hepsitakipci.com/', 'https://fastfollow.in/']
+	if cho == "login":
+		hhh = random.choice(login)+str('login')
+	elif cho == "mem":
+		hhh = random.choice(mem)+str('member')
+	return hhh
 
 
 app = Flask(__name__)
 
-@app.route('/check/email=<email>/by/cc_02', methods=['GET'])
-def chk(email):
-	ma = requests.Session()
-	passwor = f"#PWD_INSTAGRAM_BROWSER:0:{int(time.time())}:hassan11inthetop878n"
-	rs3 = ma.get('https://www.instagram.com/accounts/login/')
-	ctk = rs3.text.replace("\\", "").split('csrf_token\":\"')[1].split('"')[0]
-	headers = {
-	            "user-agent": generate_user_agent(),
-	            "x-csrftoken": ctk,
-	            "x-ig-www-claim": "0",
-	        }
-	rs3 = ma.post(
-	            "https://www.instagram.com/api/v1/web/accounts/login/ajax/",
-	            headers=headers,
-	data={
-	                "enc_password": passwor,
-	                "username": email,
-	                "queryParams": "{}",
-	                "optIntoOneTap": "false",
-	                "trustedDeviceRecords": "{}"
-	            },
-	        )
+@app.route('/login/username=<username>/password=<password>/by/cc_02', methods=['GET'])
+def login(username,password)
+	url = rand(random.choice(['login','mem']))
 	
-	headers.update({"x-ig-set-www-claim":"0"})
-	headers.update({"x-csrftoken": ctk})
-	if 'html' in rs3.text:
+	payload = {
+		'username':f'{username}',
+		'password':f'{password}'
+	}
+	
+	
+	
+	headers = {
+	  'User-Agent': "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+	  'Accept': "application/json, text/javascript, */*; q=0.01",
+	  'content-type': "application/x-www-form-urlencoded; charset=UTF-8",
+	
+	}
+	
+	response = requests.post(url, data=payload, headers=headers)
+	
+	if '"status":"success"' in response.text:
 		return jsonify({
-			'by':'@cc_02',
-			'email':f'{email}',
-			'message':'Available iG',
-			'status':True
+			'status':True,
+			'message':'Done Login',
+			'username':str(username),
+			'password':str(password),
+			'by':'cc_02'
 		})
 	else:
 		return jsonify({
-			'by':'@cc_02',
-			'email':f'{email}',
-			'message':'unAvailable iG',
-			'status':False
+			'status':False,
+			'message':'bad Login',
+			'username':str(username),
+			'password':str(password),
+			'by':'cc_02'
 		})
 
 
