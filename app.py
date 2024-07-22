@@ -150,19 +150,47 @@ async def check(client,username):
 		except errors.rpcbaseerrors.BadRequestError:
 			return 'ban'
 def fragment(username):
-	url = f"https://fragment.com/?query={username}"
+	url = "https://fragment.com/api?hash=f5e27620deccb03f9e"
+	
+	
+	payload = {
+	  'type': 'usernames',
+	  'query': str(username),
+	  'filter': '',
+	  'sort': '',
+	  'method': 'searchAuctions'
+	}
+	
 	headers = {
-		'User-Agent': "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
-		'Accept': "application/json, text/javascript, */*; q=0.01",
-		'X-Requested-With': "XMLHttpRequest",
-		'Sec-Fetch-Site': "same-origin",}
-	response = requests.post(url,headers=headers).text
-	if 'taken' in response:
-		return 'is taken'
-	elif 'Unavailable' in response:
-		return True
-	else:
-		return False
+	  'User-Agent': "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
+	  'Accept': "application/json, text/javascript, */*; q=0.01",
+	  'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8",
+	  'X-Requested-With': "XMLHttpRequest",
+	  'Sec-Fetch-Site': "same-origin",
+	  'Accept-Language': "ar",
+	  'Sec-Fetch-Mode': "cors",
+	  'Origin': "https://fragment.com",
+	  'Referer': "https://fragment.com/?query=Hassan",
+	#  'Sec-Fetch-Dest': "empty",
+	  'Cookie': "__cf_bm=Efh_fl_hfI6v7fzH5lb5PHdaK6rWg_PRyz6xG2Pvg7E-1720661341-1.0.1.1-j6dtE.lVGNwRs47UgxSL81P912BdcOizP.xir7CBSest86RzPfoz7_Z.M_J0gfxnvp26h3fpZvqCb9W.yEoYnA; stel_dt=-180; stel_ssid=d80e817680c9c8bbce_15401836114607895995"
+	}
+	
+	response = requests.post(url, data=payload, headers=headers).text
+	
+	try:
+	    response_json = json.loads(response)
+	except json.JSONDecodeError:
+	    #print("Failed to decode JSON response")
+	    response_json = {}
+	
+	html_content = response_json.get("html", "")
+	if re.search(r'<div class="table-cell-value tm-value tm-status-taken">Taken<\/div>', html_content):
+	    return 'is taken'
+	elif re.search(r'<div class="table-cell-status-thin thin-only tm-status-avail">Available<\/div>', html_content):
+	    return False
+	
+	elif re.search(r'<div class="table-cell-status-thin thin-only tm-status-unavail">Unavailable<\/div>', html_content):
+	    return True
 
 def check_session(message):
     session = message.text
