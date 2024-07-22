@@ -150,18 +150,17 @@ async def check(client,username):
 		except errors.rpcbaseerrors.BadRequestError:
 			return 'ban'
 def fragment(username):
-	url = f"https://fragment.com/username/{username}"
+	url = f"https://fragment.com/?query={username}"
 	headers = {
 		'User-Agent': "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
 		'Accept': "application/json, text/javascript, */*; q=0.01",
 		'X-Requested-With': "XMLHttpRequest",
 		'Sec-Fetch-Site': "same-origin",}
-	r = requests.post(url,headers=headers).text
-	print(r)
-	if '?query' in r:
-		return True
-	elif 'Someone already claimed this username on Telegram.' in r:
+	response = requests.post(url,headers=headers).text
+	if 'taken' in response:
 		return 'is taken'
+	elif 'Unavailable' in response:
+		return True
 	else:
 		return False
 
