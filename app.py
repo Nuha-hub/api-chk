@@ -16,4 +16,5 @@ def fragment(username):
 		return 'is taken'
 	else:
 		return False
-print(fragment('u_l_kekew'))
+while True:
+	print(fragment('u_l_kekew'))
