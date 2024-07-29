@@ -160,7 +160,7 @@ def fragment(username):
 		'X-Requested-With': "XMLHttpRequest",
 		'Sec-Fetch-Site': "same-origin",}
 	r = requests.post(url,headers=headers).text
-	print(r)
+	#print(r)
 	if '?query' in r:
 		return True
 	elif 'Someone already claimed this username on Telegram.' in r:
