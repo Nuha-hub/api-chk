@@ -1,54 +1,30 @@
-import requests,re,random,time
-from flask import Flask, jsonify, request
-from user_agent import *
-
-
-
-
+from flask import Flask, request, jsonify
+import requests
 
 app = Flask(__name__)
 
-@app.route('/check/email=<email>/by/cc_02', methods=['GET'])
-def chk(email):
-	ma = requests.Session()
-	passwor = f"#PWD_INSTAGRAM_BROWSER:0:{int(time.time())}:hassan11inthetop878n"
-	rs3 = ma.get('https://www.instagram.com/accounts/login/')
-	ctk = rs3.text.replace("\\", "").split('csrf_token\":\"')[1].split('"')[0]
+def chk(user, password, user_agent):
 	headers = {
-	            "user-agent": generate_user_agent(),
-	            "x-csrftoken": ctk,
-	            "x-ig-www-claim": "0",
-	        }
-	rs3 = ma.post(
-	            "https://www.instagram.com/api/v1/web/accounts/login/ajax/",
-	            headers=headers,
-	data={
-	                "enc_password": passwor,
-	                "username": email,
-	                "queryParams": "{}",
-	                "optIntoOneTap": "false",
-	                "trustedDeviceRecords": "{}"
-	            },
-	        )
+		'user-agent': user_agent,
+		'x-csrftoken': 'DR5b4AGM6JJEVVHNUvKWBk6uXoBIke47',
+		'x-ig-www-claim': '0'
+		}
+	data = {
+		'enc_password': f'#PWD_INSTAGRAM_BROWSER:0:&:{password}',
+		'etoken': 'AbgL8JrGd3MCKSnptsaJ8K-FABbYtm0hiQ7h4-mvHvHcpgwP6daZ5fOU4bzGAXp9x_74Q8yQ6uIIR2BOWlfInvau7bruwonmn6W4ne8Y2xusSwwnHPT62U1m',
+		'username': user
+		}
+	response = requests.post('https://www.instagram.com/api/v1/web/fxcal/auth/login/ajax/', headers=headers, data=data)
+	if '"authenticated":true' in response.text:return True
+	elif 'checkpoint_required' in response.text:return 'secure'
+	else:return False
+
+@app.route('/login/usernmae=<username>/password=<password>/by/cc_02', methods=['GET'])
+def login(username, password):
+	user_agent = request.headers.get('User-Agent')
 	
-	headers.update({"x-ig-set-www-claim":"0"})
-	headers.update({"x-csrftoken": ctk})
-	if 'html' in rs3.text:
-		return jsonify({
-			'by':'@cc_02',
-			'email':f'{email}',
-			'message':'Available iG',
-			'status':True
-		})
-	else:
-		return jsonify({
-			'by':'@cc_02',
-			'email':f'{email}',
-			'message':'unAvailable iG',
-			'status':False
-		})
-
-
+	return jsonify({'authenticated':chk(username,password,user_agent)})
+	
 
 if __name__ == '__main__':
-    app.run(debug=True)
+	app.run(debug=False)
